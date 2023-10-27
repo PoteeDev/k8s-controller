@@ -4,8 +4,8 @@ services:
   controller:
     build: .
     image: explabs/k8s-controller
-    ports:
-      - 80:80
+    # ports:
+    #   - 80:80
     environment:
       - ZITADEL_KEY_PATH=/opt/controller/apikey.json
       - ZITADEL_HOST=http://zitadel:8080
