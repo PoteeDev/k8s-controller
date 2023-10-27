@@ -1,4 +1,4 @@
-# k8s-controller
+# stand-controller
 
 # Run from source
 ```
