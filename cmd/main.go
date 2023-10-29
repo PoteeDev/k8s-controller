@@ -64,6 +64,7 @@ func main() {
 	router.HandleFunc("/protected", introspection.HandlerFunc(s.Ping))
 	router.HandleFunc("/stand/deploy", introspection.HandlerFunc(s.DeployStand))
 	router.HandleFunc("/stand/destroy", introspection.HandlerFunc(s.DestroyStand))
+	router.HandleFunc("/stand/info", introspection.HandlerFunc(s.InfoHandler))
 
 	nextRequestID := func() string {
 		return fmt.Sprintf("%d", time.Now().UnixNano())
