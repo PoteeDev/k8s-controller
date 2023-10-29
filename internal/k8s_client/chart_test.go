@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-var goodChart = InitChart("testName", "repo", "test")
+var goodChart, _ = InitChart("testName", "repo")
 
 func TestAddRepo(t *testing.T) {
 	err := goodChart.AddRepo()

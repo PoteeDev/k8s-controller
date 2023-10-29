@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/PoteeDev/k8s-controller/internal/handlers"
+	"github.com/zitadel/oidc/v3/pkg/client/rs"
 	http_mw "github.com/zitadel/zitadel-go/v2/pkg/api/middleware/http"
 	"github.com/zitadel/zitadel-go/v2/pkg/client/middleware"
 )
@@ -51,12 +52,18 @@ func main() {
 	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
 	logger.Printf("Server is starting...")
 
-	s := handlers.Server{}
+	provider, err := rs.NewResourceServerFromKeyFile(context.TODO(), *issuer, middleware.OSKeyPath())
+	if err != nil {
+		logger.Fatalf("error creating token source %s", err.Error())
+	}
+
+	s := handlers.InitServer(provider)
 
 	router := http.NewServeMux()
 	router.HandleFunc("/public", s.Ping)
 	router.HandleFunc("/protected", introspection.HandlerFunc(s.Ping))
-	router.HandleFunc("/stand/deploy", s.DeployStand)
+	router.HandleFunc("/stand/deploy", introspection.HandlerFunc(s.DeployStand))
+	router.HandleFunc("/stand/destroy", introspection.HandlerFunc(s.DestroyStand))
 
 	nextRequestID := func() string {
 		return fmt.Sprintf("%d", time.Now().UnixNano())
